@@ -18,7 +18,7 @@ n_hashes = 4
 model_save_path = 'reformer_language_model.pth'
 model = ReformerLanguageModel(vocab_size, n_embd, block_size, n_layer, n_buckets, n_hashes)
 model.load_state_dict(torch.load(model_save_path))
-model.eval()  # Set the model to evaluation mode
+model.eval()  
 
 stoi = { ch:i for i, ch in enumerate(chars) }
 
