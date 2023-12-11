@@ -7,7 +7,6 @@ import streamlit as st
 with open('input.txt', 'r', encoding='utf-8') as f:
     text = f.read()
 
-# here are all the unique characters that occur in this text
 chars = sorted(list(set(text)))
 vocab_size = len(chars)
 n_embd = 384             # Embedding dimension size
@@ -42,25 +41,24 @@ def generate_text(initial_text,block_size=256, max_new_tokens=5000):
     
     with torch.no_grad():  # Disable gradient calculations for inference
         for _ in range(max_new_tokens):
-            # Crop idx to the last block_size tokens
+            
             idx_cond = idx[:, -block_size:]
 
-            # Get the predictions
+      
             logits, _ = model(idx_cond)
-            # Focus only on the last time step
+      
             logits = logits[:, -1, :]  # Becomes (B, C)
-            # Apply softmax to get probabilities
+           
             probs = F.softmax(logits, dim=-1)  # (B, C)
-            # Sample from the distribution
+       
             idx_next = torch.multinomial(probs, num_samples=1)  # (B, 1)
-            # Append sampled index to the running sequence
+         
             idx = torch.cat((idx, idx_next), dim=1)  # (B, T+1)
 
-            # Decode the last token and add it to the generated text
             last_token = decode(idx[0, -1].unsqueeze(0).tolist())
             generated_text += last_token
 
-            # Print the newly generated token
+            
             #print(last_token, end='', flush=True)
             text_placeholder.text(generated_text)
 
